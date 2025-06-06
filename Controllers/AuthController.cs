@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using InternationalBankAPI.Helpers;
 using Microsoft.Extensions.Configuration;
 
 namespace InternationalBankAPI.Controllers
@@ -42,7 +43,7 @@ namespace InternationalBankAPI.Controllers
             if (await _context.Customers.AnyAsync(c => c.AccountNumber == request.AccountNumber))
                 return BadRequest("Account already exists.");
 
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            PasswordHelper.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             var customer = new Customer
             {
@@ -65,7 +66,7 @@ namespace InternationalBankAPI.Controllers
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountNumber == request.AccountNumber);
             if (customer == null) return Unauthorized("Invalid credentials.");
 
-            if (!VerifyPasswordHash(request.Password, customer.PasswordHash, customer.PasswordSalt))
+            if (!PasswordHelper.VerifyPasswordHash(request.Password, customer.PasswordHash, customer.PasswordSalt))
                 return Unauthorized("Invalid credentials.");
 
             // Generate JWT token
@@ -101,19 +102,20 @@ namespace InternationalBankAPI.Controllers
 
 
         // Helper Methods
-        private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
+       /*private static void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
         {
             using var hmac = new HMACSHA512();
             salt = hmac.Key;
             hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-        private bool VerifyPasswordHash(string password, byte[] hash, byte[] salt)
+        private static bool VerifyPasswordHash(string password, byte[] hash, byte[] salt)
         {
             using var hmac = new HMACSHA512(salt);
             var computed = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return computed.SequenceEqual(hash);
         }
+       */
     }
 }
 
