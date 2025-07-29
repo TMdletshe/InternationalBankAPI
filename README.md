@@ -41,3 +41,51 @@
    ```bash
    git clone https://github.com/yourusername/international-payment-system.git
    cd international-payment-system
+
+2. Backend Setup:
+
+Navigate to the backend folder:
+
+bash
+CopyEdit
+cd backend
+Configure database connection string in appsettings.json.
+
+Run migrations to set up the database schema:
+
+bash
+CopyEdit
+dotnet ef database update
+Start the backend API:
+
+bash
+CopyEdit
+dotnet run
+3. Frontend Setup:
+
+Navigate to the frontend folder:
+
+bash
+
+cd ../frontend
+CopyEdit
+Install dependencies:
+
+bash
+CopyEdit
+npm install
+Start the React development server:
+
+bash
+CopyEdit
+npm start
+4. Access the application at http://localhost:3000.
+
+
+
+
+
+
+
+
+   
